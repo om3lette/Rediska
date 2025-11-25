@@ -1,0 +1,9 @@
+/.idea/.gitignore
+/.idea/editor.xml
+/.idea/misc.xml
+/.idea/modules.xml
+/.idea/inspectionProfiles/Project_Default.xml
+/.idea/Rediska.iml
+/.idea/vcs.xml
+/cmake-build-debug
+/build
