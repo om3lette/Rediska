@@ -18,4 +18,6 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(Catch2)
 
-add_executable(Rediska main.cpp)
+add_executable(Rediska rediska/main.cpp)
+add_executable(tests tests/example_test.cpp)
+target_link_libraries(tests PRIVATE Catch2::Catch2WithMain)
