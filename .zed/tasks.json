@@ -35,5 +35,17 @@
     "command": "cmake --build ./cmake-build-release --target clean",
     "reveal": "no_focus",
     "hide": "on_success"
+  },
+  {
+    "label": "Clean tests debug build directory",
+    "command": "cmake --build ./tests/cmake-build-debug --target clean",
+    "reveal": "no_focus",
+    "hide": "on_success"
+  },
+  {
+    "label": "Clean tests release build directory",
+    "command": "cmake --build ./tests/cmake-build-release --target clean",
+    "reveal": "no_focus",
+    "hide": "on_success"
   }
 ]
