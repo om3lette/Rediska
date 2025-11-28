@@ -1,4 +1,4 @@
-name: Linux CI
+name: Linux (Ubuntu-24.04) CI
 
 on: [push, pull_request]
 
