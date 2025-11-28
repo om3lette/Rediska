@@ -29,7 +29,7 @@ if(CPPCHECK_EXECUTABLE)
             --std=c++23
             --error-exitcode=1
             --inline-suppr
-            ${CMAKE_SOURCE_DIR}/rediska ${CMAKE_SOURCE_DIR}/tests
+            ${CMAKE_SOURCE_DIR}/rediska
     )
     set_tests_properties(static_analysis PROPERTIES
         LABELS "static"

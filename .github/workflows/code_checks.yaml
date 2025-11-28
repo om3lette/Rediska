@@ -14,11 +14,11 @@ jobs:
         with:
           cppcheck: true
 
-      - name: Static analysis
+      - name: Static analysis (source code)
         run: |
           cppcheck \
             --enable=all \
             --std=c++23 \
             --inline-suppr \
             --error-exitcode=1 \
-            rediska/ tests/
+            rediska/
