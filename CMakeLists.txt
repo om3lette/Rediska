@@ -27,4 +27,6 @@ FetchContent_MakeAvailable(doctest)
 FetchContent_MakeAvailable(spdlog)
 
 add_subdirectory(rediska)
+
+enable_testing()
 add_subdirectory(tests)
