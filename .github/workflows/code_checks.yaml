@@ -1,0 +1,24 @@
+name: Code Analysis
+
+on: [push, pull_request]
+
+jobs:
+  analysis:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup
+        uses: aminya/setup-cpp@v1
+        with:
+          cppcheck: true
+
+      - name: Static analysis (source code)
+        run: |
+          cppcheck \
+            --enable=all \
+            --std=c++23 \
+            --inline-suppr \
+            --error-exitcode=1 \
+            rediska/

@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.28)
 project(Rediska)
 
 set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 if (MSVC)
     add_compile_options(/W4)
@@ -12,12 +13,20 @@ endif()
 include(FetchContent)
 
 FetchContent_Declare(
-    Catch2
-    GIT_REPOSITORY https://github.com/catchorg/Catch2.git
-    GIT_TAG v3.11.0
+    doctest
+    GIT_REPOSITORY https://github.com/doctest/doctest.git
+    GIT_TAG v2.4.12
 )
-FetchContent_MakeAvailable(Catch2)
+FetchContent_Declare(
+    spdlog
+    GIT_REPOSITORY https://github.com/gabime/spdlog.git
+    GIT_TAG v1.16.0
+)
 
-add_executable(Rediska rediska/main.cpp)
-add_executable(tests tests/example_test.cpp)
-target_link_libraries(tests PRIVATE Catch2::Catch2WithMain)
+FetchContent_MakeAvailable(doctest)
+FetchContent_MakeAvailable(spdlog)
+
+add_subdirectory(rediska)
+
+enable_testing()
+add_subdirectory(tests)
