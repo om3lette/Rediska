@@ -13,6 +13,18 @@
     "hide": "on_success"
   },
   {
+    "label": "Setup tests debug build directory",
+    "command": "cmake -S ${ZED_WORKTREE_ROOT} -B ${ZED_WORKTREE_ROOT}/tests/cmake-build-debug -DCMAKE_BUILD_TYPE=Debug",
+    "reveal": "no_focus",
+    "hide": "on_success"
+  },
+  {
+    "label": "Setup tests release build directory",
+    "command": "cmake -S ${ZED_WORKTREE_ROOT} -B ${ZED_WORKTREE_ROOT}/tests/cmake-build-release -DCMAKE_BUILD_TYPE=Release",
+    "reveal": "no_focus",
+    "hide": "on_success"
+  },
+  {
     "label": "Clean debug build directory",
     "command": "cmake --build ./cmake-build-debug --target clean",
     "reveal": "no_focus",
