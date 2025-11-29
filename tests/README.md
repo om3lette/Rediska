@@ -1,27 +1,39 @@
-## Новая группа тестов
+# Creating a test group
 
-1. Создайте новый файл, отображающий назначение тестов, которые он содержит.
-2. Вставьте необходимые заголовки тестирующей системы
+1. **Create a new test file** \
+    Place it under `/tests/frontend/` or `/tests/backend/`, following the [naming convention](#naming-convention) below.
 
-```C++
-#include <doctest/doctest.h>
-```
+2. **Include the testing framework**  \
+    Add the following at the top of the file:
+    ```C++
+    #include <doctest/doctest.h>
+    ```
 
-3. Добавьте файл в `/tests/CMakeLists.txt` 
-4. Теперь вы готовы приступить к написанию тестов! 
+3. **Register the file in the build system** \
+   Add the new test file to `/tests/CMakeLists.txt` so it’s compiled and executed as part of the test suite.
 
+4. **Start writing tests!** \
+   See [doctest docs](https://github.com/doctest/doctest/blob/master/doc/markdown/readme.md) for more details.
 
-## Пример тестового файла
+# Naming convention
 
-```C++
-#include <doctest/doctest.h>
+File name should match against the following pattern:
 
-int factorial(int number) { return number <= 1 ? number : factorial(number - 1) * number; }
+`<module>_<feature>_<test_type>_tests.cpp`
 
-TEST_CASE("testing the factorial function") {
-    CHECK(factorial(1) == 1);
-    CHECK(factorial(2) == 2);
-    CHECK(factorial(3) == 6);
-    CHECK(factorial(10) == 3628800);
-}
-```
+Where:
+- `<module>` - the component or subsystem under test.
+  - Backend modules:  `cache` | `worker`
+  - Frontend modules: `work in progress`
+- `<feature>` - a concise, kebab-case description of the specific functionality.  
+- `<test_type>` - one of the following:
+  - `unit`
+  - `integration`
+  - `e2e`
+
+# Examples
+
+| Path                                           | Description                                                    |
+| :--------------------------------------------- | :------------------------------------------------------------- |
+| `backend/cache_lru_unit_tests.cpp`             | Unit tests for LRU eviction logic in the cache module          |
+| `backend/worker_handle-request_unit_tests.cpp` | Unit tests for the request-handling logic in the worker module |
