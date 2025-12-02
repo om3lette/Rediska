@@ -1,6 +1,6 @@
 name: Linux (Ubuntu-24.04) CI
 
-on: [push, pull_request]
+on: [push]
 
 jobs:
   build:

@@ -26,6 +26,7 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(doctest)
 FetchContent_MakeAvailable(spdlog)
 
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 add_subdirectory(rediska)
 
 enable_testing()
