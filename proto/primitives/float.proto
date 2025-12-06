@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+package primitives.float;
+
+service FloatService {
+  rpc Set(FloatSetRequest) returns (google.protobuf.Empty);
+  rpc Get(FloatGetRequest) returns (FloatGetResponse);
+  rpc Delete(FloatDeleteRequest) returns (FloatDeleteResponse);
+}
+
+message FloatSetRequest {
+  string id = 1;
+  double value = 2;
+  optional uint64 ttl_seconds = 3;
+}
+
+message FloatGetRequest {
+  string id = 1;
+}
+
+message FloatGetResponse {
+  double value = 1;
+}
+
+message FloatDeleteRequest {
+  string id = 1;
+}
+
+message FloatDeleteResponse {
+  double removed_value = 1;
+}
