@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package collections.common;
+
+enum ElementKind {
+  INT = 0;
+  FLOAT = 1;
+  BOOL = 2;
+  STRING = 3;
+  OBJECT = 4;
+  LIST = 5;
+}

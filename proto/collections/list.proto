@@ -1,0 +1,97 @@
+syntax = "proto3";
+import "common.proto";
+import "element_kind.proto";
+import "google/protobuf/empty.proto";
+
+package collections.list;
+
+service ListCacheService {
+  rpc Create(stream ListCreateRequest) returns (ListCreateResponse);
+  rpc Get(ListGetRequest) returns (stream ListGetResponse);
+  rpc Insert(ListInsertRequest) returns (google.protobuf.Empty);
+  rpc Erase(ListEraseRequest) returns (ListEraseResponse);
+  rpc Set(ListSetRequest) returns (ListSetResponse);
+  rpc Length(ListLengthRequest) returns (ListLengthResponse);
+  rpc PushBack(PushBackRequest) returns (google.protobuf.Empty);
+  rpc PushMany(PushManyRequest) returns (google.protobuf.Empty);
+  rpc PopBack(PopBackRequest) returns (PopBackResponse);
+  rpc Clear(ClearRequest) returns (google.protobuf.Empty);
+  rpc Delete(DeleteRequest) returns (google.protobuf.Empty);
+}
+
+message ListCreateRequest {
+  common.ElementKind element_kind = 1;
+  optional uint64 ttl_seconds = 2;
+}
+
+message ListCreateResponse {
+  string id = 1;
+}
+
+message ListGetRequest {
+  string id = 1;
+}
+
+message ListGetResponse {
+  common.CollectionElement element = 1;
+}
+
+message ListInsertRequest {
+  string id = 1;
+  uint64 index = 2;
+  common.CollectionElement value = 3;
+}
+
+message ListEraseRequest {
+  string id = 1;
+  int64 index = 2;
+}
+
+message ListEraseResponse {
+  common.CollectionElement removed_value = 1;
+}
+
+message ListSetRequest {
+  string id = 1;
+  uint64 index = 2;
+  common.CollectionElement value = 3;
+}
+
+message ListSetResponse {
+  common.CollectionElement old_element = 1;
+}
+
+message ListLengthRequest {
+  string id = 1;
+}
+
+message ListLengthResponse {
+  uint64 length = 1;
+}
+
+message PushBackRequest {
+  string id = 1;
+  common.CollectionElement element = 2;
+}
+
+message PushManyRequest {
+  string id = 1;
+  common.CollectionElement element = 2;
+}
+
+message PopBackRequest {
+  string id = 1;
+}
+
+message PopBackResponse {
+  common.CollectionElement element = 1;
+}
+
+
+message ClearRequest {
+  string id = 1;
+}
+
+message DeleteRequest {
+  string id = 1;
+}
