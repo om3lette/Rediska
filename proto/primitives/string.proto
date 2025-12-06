@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+package primitives.string;
+
+service StringService {
+  rpc Set(StringSetRequest) returns (google.protobuf.Empty);
+  rpc Get(StringGetRequest) returns (StringGetResponse);
+  rpc Delete(StringDeleteRequest) returns (StringDeleteResponse);
+}
+
+message StringSetRequest {
+  string id = 1;
+  string value = 2;
+  optional uint64 ttl_seconds = 3;
+}
+
+message StringGetRequest {
+  string id = 1;
+}
+
+message StringGetResponse {
+  string value = 1;
+}
+
+message StringDeleteRequest {
+  string id = 1;
+}
+
+message StringDeleteResponse {
+  string removed_value = 1;
+}
