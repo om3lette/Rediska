@@ -1,6 +1,6 @@
 syntax = "proto3";
-import "common.proto";
-import "element_kind.proto";
+import "v1/collections/common.proto";
+import "v1/collections/element_kind.proto";
 import "google/protobuf/empty.proto";
 
 package v1.collections.list;
