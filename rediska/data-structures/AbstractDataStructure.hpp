@@ -8,5 +8,7 @@
 
 class AbstractDataStructure {
 public:
+    virtual ~AbstractDataStructure() = default;
+
     virtual std::expected<std::optional<DSValueType>, DSReturnCode> handle(OperationId op, DSValueType data) = 0;
 };
