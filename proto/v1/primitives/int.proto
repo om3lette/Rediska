@@ -13,7 +13,7 @@ service IntService {
 message IntSetRequest {
   string id = 1;
   int64 value = 2;
-  optional uint64 ttl_seconds = 3;
+  optional uint32 ttl_seconds = 3;
 }
 
 message IntGetRequest {
