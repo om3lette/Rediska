@@ -2,7 +2,7 @@ syntax = "proto3";
 
 import "google/protobuf/empty.proto";
 
-package v1.primitives.string;
+package v1.primitives.str;
 
 service StringCacheService {
   rpc Create(StringCreateRequest) returns (StringCreateResponse);

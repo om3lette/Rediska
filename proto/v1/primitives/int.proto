@@ -2,7 +2,7 @@ syntax = "proto3";
 
 import "google/protobuf/empty.proto";
 
-package v1.primitives.int;
+package v1.primitives.integer;
 
 service IntCacheService {
   rpc Create(IntCreateRequest) returns (IntCreateResponse);

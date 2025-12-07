@@ -2,7 +2,7 @@ syntax = "proto3";
 
 import "google/protobuf/empty.proto";
 
-package v1.primitives.float;
+package v1.primitives.flt;
 
 service FloatCacheService {
   rpc Create(FloatCreateRequest) returns (FloatCreateResponse);

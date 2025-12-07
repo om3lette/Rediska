@@ -2,7 +2,7 @@ syntax = "proto3";
 
 import "google/protobuf/empty.proto";
 
-package v1.primitives.bool;
+package v1.primitives.boolean;
 
 service BoolCacheService {
   rpc Create(BoolCreateRequest) returns (BoolCreateResponse);
