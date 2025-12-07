@@ -2,7 +2,7 @@ syntax = "proto3";
 
 import "google/protobuf/empty.proto";
 
-package primitives.string;
+package v1.primitives.string;
 
 service StringService {
   rpc Set(StringSetRequest) returns (google.protobuf.Empty);

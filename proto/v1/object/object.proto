@@ -2,7 +2,7 @@ syntax = "proto3";
 
 import "google/protobuf/empty.proto";
 
-package object;
+package v1.object;
 
 service ObjectCacheService {
   rpc Create(CreateObjectRequest) returns (CreateObjectResponse);

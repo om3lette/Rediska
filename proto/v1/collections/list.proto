@@ -3,7 +3,7 @@ import "common.proto";
 import "element_kind.proto";
 import "google/protobuf/empty.proto";
 
-package collections.list;
+package v1.collections.list;
 
 service ListCacheService {
   rpc Create(stream ListCreateRequest) returns (ListCreateResponse);

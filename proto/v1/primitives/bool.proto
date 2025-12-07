@@ -2,7 +2,7 @@ syntax = "proto3";
 
 import "google/protobuf/empty.proto";
 
-package primitives.bool;
+package v1.primitives.bool;
 
 service BoolService {
   rpc Set(BoolSetRequest) returns (google.protobuf.Empty);

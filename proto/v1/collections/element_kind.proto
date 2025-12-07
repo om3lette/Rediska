@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package collections.common;
+package v1.collections.common;
 
 enum ElementKind {
   INT = 0;

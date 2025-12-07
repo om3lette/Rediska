@@ -2,7 +2,7 @@ syntax = "proto3";
 
 import "google/protobuf/empty.proto";
 
-package primitives.float;
+package v1.primitives.float;
 
 service FloatService {
   rpc Set(FloatSetRequest) returns (google.protobuf.Empty);
