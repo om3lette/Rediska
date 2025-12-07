@@ -1,0 +1,60 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+package object;
+
+service ObjectCacheService {
+  rpc Create(CreateObjectRequest) returns (CreateObjectResponse);
+  rpc Get(GetObjectRequest) returns (GetObjectResponse);
+  rpc Set(SetObjectRequest) returns (google.protobuf.Empty);
+  rpc Delete(DeleteObjectRequest) returns (google.protobuf.Empty);
+  rpc GetField(GetObjectFieldRequest) returns (GetObjectFieldResponse);
+  rpc SetField(SetObjectFieldRequest) returns (google.protobuf.Empty);
+  rpc DeleteField(DeleteObjectFieldRequest) returns (google.protobuf.Empty);
+}
+
+message CreateObjectRequest {
+  string object = 1;
+}
+
+message CreateObjectResponse {
+  string id = 1;
+}
+
+message GetObjectRequest {
+  string id = 1;
+}
+
+message GetObjectResponse {
+  string object = 1;
+}
+
+message SetObjectRequest {
+  string id = 1;
+  string new_object = 2;
+}
+
+message DeleteObjectRequest {
+  string id = 1;
+}
+
+message GetObjectFieldRequest {
+  string id = 1;
+  string field_name = 2;
+}
+
+message GetObjectFieldResponse {
+  string field_value = 1;
+}
+
+message SetObjectFieldRequest {
+  string id = 1;
+  string field_name = 2;
+  string value = 3;
+}
+
+message DeleteObjectFieldRequest {
+  string id = 1;
+  string field_name = 2;
+}
