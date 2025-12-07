@@ -4,7 +4,7 @@ import "google/protobuf/empty.proto";
 
 package v1.primitives.float;
 
-service FloatService {
+service FloatCacheService {
   rpc Create(FloatCreateRequest) returns (FloatCreateResponse);
   rpc Set(FloatSetRequest) returns (google.protobuf.Empty);
   rpc Get(FloatGetRequest) returns (FloatGetResponse);

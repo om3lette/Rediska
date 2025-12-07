@@ -4,7 +4,7 @@ import "google/protobuf/empty.proto";
 
 package v1.primitives.string;
 
-service StringService {
+service StringCacheService {
   rpc Create(StringCreateRequest) returns (StringCreateResponse);
   rpc Set(StringSetRequest) returns (google.protobuf.Empty);
   rpc Get(StringGetRequest) returns (StringGetResponse);

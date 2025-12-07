@@ -4,7 +4,7 @@ import "google/protobuf/empty.proto";
 
 package v1.primitives.bool;
 
-service BoolService {
+service BoolCacheService {
   rpc Create(BoolCreateRequest) returns (BoolCreateResponse);
   rpc Set(BoolSetRequest) returns (google.protobuf.Empty);
   rpc Get(BoolGetRequest) returns (BoolGetResponse);

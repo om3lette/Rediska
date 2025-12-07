@@ -4,7 +4,7 @@ import "google/protobuf/empty.proto";
 
 package v1.primitives.int;
 
-service IntService {
+service IntCacheService {
   rpc Create(IntCreateRequest) returns (IntCreateResponse);
   rpc Set(IntSetRequest) returns (google.protobuf.Empty);
   rpc Get(IntGetRequest) returns (IntGetResponse);
