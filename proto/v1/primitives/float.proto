@@ -5,15 +5,24 @@ import "google/protobuf/empty.proto";
 package v1.primitives.float;
 
 service FloatService {
+  rpc Create(FloatCreateRequest) returns (FloatCreateResponse);
   rpc Set(FloatSetRequest) returns (google.protobuf.Empty);
   rpc Get(FloatGetRequest) returns (FloatGetResponse);
   rpc Delete(FloatDeleteRequest) returns (FloatDeleteResponse);
 }
 
+message FloatCreateRequest {
+  double value = 1;
+  optional uint32 ttl_seconds = 2;
+}
+
+message FloatCreateResponse {
+  string id = 1;
+}
+
 message FloatSetRequest {
   string id = 1;
   double value = 2;
-  optional uint32 ttl_seconds = 3;
 }
 
 message FloatGetRequest {
