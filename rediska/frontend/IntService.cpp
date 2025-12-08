@@ -1,8 +1,9 @@
 #include <grpcpp/grpcpp.h>
-#include "v1/primitives/int.grpc.pb.h"
+#include <utility>
 
-#include "cache/frontend_message.hpp" //пока условно
-#include "queue/send_to_backend.hpp" //условно
+#include "v1/primitives/int.grpc.pb.h"
+#include "cache/frontend_message.hpp"
+#include "queue/send_to_backend.hpp"
 
 namespace rediska::frontend {
 
@@ -29,7 +30,7 @@ public:
     }
 
     grpc::Status Set(
-        grpc::ServerContext*,
+        grpc::ServerContext* context,
         const v1::primitives::integer::IntSetRequest* request,
         google::protobuf::Empty*) override
     {
@@ -45,7 +46,7 @@ public:
     }
 
     grpc::Status Get(
-        grpc::ServerContext*,
+        grpc::ServerContext* context,
         const v1::primitives::integer::IntGetRequest* request,
         v1::primitives::integer::IntGetResponse* response) override
     {
@@ -62,7 +63,7 @@ public:
     }
 
     grpc::Status Delete(
-        grpc::ServerContext*,
+        grpc::ServerContext* context,
         const v1::primitives::integer::IntDeleteRequest* request,
         v1::primitives::integer::IntDeleteResponse* response) override
     {
@@ -79,7 +80,8 @@ public:
     }
 };
 
-std::unique_ptr<grpc::Service> MakeIntService() {
+std::unique_ptr<grpc::Service> MakeIntService()
+{
     return std::make_unique<IntCacheServiceImpl>();
 }
 
