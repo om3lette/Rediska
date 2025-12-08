@@ -9,8 +9,7 @@ include(FetchContent)
 
 FetchContent_Declare(
     Protobuf
-    GIT_REPOSITORY https://github.com/protocolbuffers/protobuf.git
-    GIT_TAG v33.2
+    URL https://github.com/protocolbuffers/protobuf/releases/download/v25.2/protobuf-25.2.tar.gz
     SOURCE_SUBDIR cmake
 )
 FetchContent_MakeAvailable(Protobuf)
