@@ -3,6 +3,10 @@ project(rediska_frontend)
 
 add_library(frontend STATIC
     skeleton_service.cpp
+    int_service.cpp
+    bool_service.cpp
+    float_service.cpp
+    string_service.cpp
 )
 
 set(ABSL_ENABLE_INSTALL ON)
@@ -43,9 +47,9 @@ foreach (PROTO_FILE ${PROTO_FILES})
     string(REGEX REPLACE "\\.proto$" "" PROTO_FILE_WE ${PROTO_FILE_REL})
 
     set(OUT_PB_CC "${PROTO_GEN_DIR}/${PROTO_FILE_WE}.pb.cc")
-    set(OUT_PB_H "${PROTO_GEN_DIR}/${PROTO_FILE_WE}.pb.h")
+    set(OUT_PB_H  "${PROTO_GEN_DIR}/${PROTO_FILE_WE}.pb.h")
     set(OUT_GRPC_CC "${PROTO_GEN_DIR}/${PROTO_FILE_WE}.grpc.pb.cc")
-    set(OUT_GRPC_H "${PROTO_GEN_DIR}/${PROTO_FILE_WE}.grpc.pb.h")
+    set(OUT_GRPC_H  "${PROTO_GEN_DIR}/${PROTO_FILE_WE}.grpc.pb.h")
 
     add_custom_command(
         OUTPUT ${OUT_PB_CC} ${OUT_PB_H} ${OUT_GRPC_CC} ${OUT_GRPC_H}
