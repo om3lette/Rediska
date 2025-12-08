@@ -11,11 +11,15 @@ namespace cache {
     class LRU : public CachePolicy {
     public:
         using ItemMetadata = struct {
-            Timestamp expires_at;
+            Timestamp expiresAt;
         };
         using ItemHandle = struct {
             CacheValue value;
             ItemMetadata metadata;
+        };
+        using CacheNode = struct {
+            CacheKey key;
+            ItemHandle location;
         };
 
         LRU(LRUConfig config, CacheOpCallback callback);
@@ -25,15 +29,19 @@ namespace cache {
 
         void set(CacheKey&& key, CacheValue&& value, TTL ttl) override;
 
-        void applyTo(CacheKey&& key, OperationId op, CacheValueId type) override;
+        void applyTo(CacheKey&& key, OperationId op) override;
 
     private:
-        std::list<ItemHandle> lru_list_;
-        std::unordered_map<CacheKey, std::list<ItemHandle>::iterator> keyToItem_;
+        std::list<CacheNode> lru_list_;
+        std::unordered_map<CacheKey, std::list<CacheNode>::iterator> keyToItem_;
 
         std::shared_mutex mutex_;
 
         LRUConfig config_;
         CacheOpCallback callback_;
+
+        void evict() override;
+
+        void evict(const std::unordered_map<CacheKey, std::list<CacheNode>::iterator>::iterator node);
     };
 }

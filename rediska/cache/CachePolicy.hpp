@@ -10,6 +10,16 @@ namespace cache {
 
             virtual void set(CacheKey&& key, CacheValue&& value, TTL ttl) = 0;
 
-            virtual void applyTo(CacheKey&& key, OperationId op, CacheValueId type) = 0;
+            virtual void applyTo(CacheKey&& key, OperationId op) = 0;
+        protected:
+            inline static Timestamp getExpirationTime(TTL ttl) {
+                return std::chrono::steady_clock::now() + std::chrono::seconds(ttl);
+            }
+
+            inline static bool isExpired(Timestamp expirationTime) {
+                return expirationTime < std::chrono::steady_clock::now();
+            }
+
+            virtual void evict() = 0;
     };
 }
