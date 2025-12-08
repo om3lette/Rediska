@@ -1,4 +1,9 @@
-add_library(frontend STATIC tmp.cpp)
+cmake_minimum_required(VERSION 3.16)
+project(rediska_frontend)
+
+add_library(frontend STATIC
+    skeleton_service.cpp
+)
 
 set(ABSL_ENABLE_INSTALL ON)
 
@@ -32,7 +37,6 @@ set(GENERATED_SRCS)
 
 foreach (PROTO_FILE ${PROTO_FILES})
     file(RELATIVE_PATH PROTO_FILE_REL ${PROTO_ROOT_DIR} ${PROTO_FILE})
-
     get_filename_component(PROTO_FILE_DIR ${PROTO_FILE_REL} DIRECTORY)
     file(MAKE_DIRECTORY "${PROTO_GEN_DIR}/${PROTO_FILE_DIR}")
 
@@ -47,25 +51,26 @@ foreach (PROTO_FILE ${PROTO_FILES})
         OUTPUT ${OUT_PB_CC} ${OUT_PB_H} ${OUT_GRPC_CC} ${OUT_GRPC_H}
         COMMAND protobuf::protoc
         ARGS
-        --cpp_out=${PROTO_GEN_DIR}
-        --grpc_out=${PROTO_GEN_DIR}
-        --plugin=protoc-gen-grpc=$<TARGET_FILE:grpc_cpp_plugin>
-        -I ${PROTO_ROOT_DIR}
-        -I "${protobuf_SOURCE_DIR}/src"
-        ${PROTO_FILE}
+          --cpp_out=${PROTO_GEN_DIR}
+          --grpc_out=${PROTO_GEN_DIR}
+          --plugin=protoc-gen-grpc=$<TARGET_FILE:grpc_cpp_plugin>
+          -I ${PROTO_ROOT_DIR}
+          ${PROTO_FILE}
         DEPENDS ${PROTO_FILE} protobuf::protoc grpc_cpp_plugin
-        COMMENT "Generating gRPC code for ${PROTO_FILE_REL}"
         VERBATIM
     )
 
-    list(APPEND GENERATED_SRCS ${OUT_PB_CC} ${OUT_PB_H} ${OUT_GRPC_CC} ${OUT_GRPC_H})
-endforeach ()
+    list(APPEND GENERATED_SRCS
+      ${OUT_PB_CC}
+      ${OUT_GRPC_CC}
+    )
+endforeach()
 
 target_sources(frontend PRIVATE ${GENERATED_SRCS})
 target_include_directories(frontend PUBLIC ${PROTO_GEN_DIR})
 
 target_link_libraries(frontend
     PUBLIC
-    grpc++
-    protobuf::libprotobuf
+      grpc++
+      protobuf::libprotobuf
 )
