@@ -1,25 +1,7 @@
 add_library(frontend STATIC tmp.cpp)
 
-set(ABSL_ENABLE_INSTALL ON)
-
-set(protobuf_BUILD_TESTS OFF CACHE BOOL "" FORCE)
-set(gRPC_BUILD_TESTS OFF CACHE BOOL "" FORCE)
-
-include(FetchContent)
-
-FetchContent_Declare(
-    Protobuf
-    URL https://github.com/protocolbuffers/protobuf/releases/download/v25.2/protobuf-25.2.tar.gz
-    SOURCE_SUBDIR cmake
-)
-FetchContent_MakeAvailable(Protobuf)
-
-FetchContent_Declare(
-    gRPC
-    GIT_REPOSITORY https://github.com/grpc/grpc
-    GIT_TAG v1.76.0
-)
-FetchContent_MakeAvailable(gRPC)
+find_package(Protobuf REQUIRED)
+find_package(gRPC REQUIRED)
 
 get_filename_component(PROTO_ROOT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../../proto" ABSOLUTE)
 set(PROTO_GEN_DIR "${CMAKE_CURRENT_BINARY_DIR}/generated")
@@ -48,11 +30,10 @@ foreach (PROTO_FILE ${PROTO_FILES})
         ARGS
         --cpp_out=${PROTO_GEN_DIR}
         --grpc_out=${PROTO_GEN_DIR}
-        --plugin=protoc-gen-grpc=$<TARGET_FILE:grpc_cpp_plugin>
+        --plugin=protoc-gen-grpc=$<TARGET_FILE:gRPC::grpc_cpp_plugin>
         -I ${PROTO_ROOT_DIR}
-        -I "${protobuf_SOURCE_DIR}/src"
         ${PROTO_FILE}
-        DEPENDS ${PROTO_FILE} protobuf::protoc grpc_cpp_plugin
+        DEPENDS ${PROTO_FILE} protobuf::protoc gRPC::grpc_cpp_plugin
         COMMENT "Generating gRPC code for ${PROTO_FILE_REL}"
         VERBATIM
     )
@@ -65,6 +46,6 @@ target_include_directories(frontend PUBLIC ${PROTO_GEN_DIR})
 
 target_link_libraries(frontend
     PUBLIC
-    grpc++
+    gRPC::grpc++
     protobuf::libprotobuf
 )
