@@ -1,6 +1,3 @@
-cmake_minimum_required(VERSION 3.16)
-project(rediska_frontend)
-
 add_library(frontend STATIC
     skeleton_service.cpp
     int_service.cpp
@@ -9,72 +6,56 @@ add_library(frontend STATIC
     string_service.cpp
 )
 
-set(ABSL_ENABLE_INSTALL ON)
+# Find packages
+find_package(Protobuf REQUIRED CONFIG)
+find_package(gRPC REQUIRED CONFIG)
 
-set(protobuf_BUILD_TESTS OFF CACHE BOOL "" FORCE)
-set(gRPC_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+set(PROTO_ROOT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../../proto")
 
-include(FetchContent)
-
-FetchContent_Declare(
-    Protobuf
-    GIT_REPOSITORY https://github.com/protocolbuffers/protobuf.git
-    GIT_TAG v33.2
-    SOURCE_SUBDIR cmake
+# Define the proto files
+set(PROTO_FILES
+    "${PROTO_ROOT_DIR}/v1/collections/common.proto"
+    "${PROTO_ROOT_DIR}/v1/collections/element_kind.proto"
+    "${PROTO_ROOT_DIR}/v1/collections/list.proto"
+    "${PROTO_ROOT_DIR}/v1/object/object.proto"
+    "${PROTO_ROOT_DIR}/v1/primitives/bool.proto"
+    "${PROTO_ROOT_DIR}/v1/primitives/float.proto"
+    "${PROTO_ROOT_DIR}/v1/primitives/int.proto"
+    "${PROTO_ROOT_DIR}/v1/primitives/string.proto"
 )
-FetchContent_MakeAvailable(Protobuf)
 
-FetchContent_Declare(
-    gRPC
-    GIT_REPOSITORY https://github.com/grpc/grpc
-    GIT_TAG v1.76.0
+# This allows protobuf_generate to find them when inspecting the target.
+target_sources(frontend PRIVATE ${PROTO_FILES})
+
+# Include directories
+# We include the binary dir (for generated .pb.h files) and the root (for imports)
+target_include_directories(frontend PUBLIC
+    "${CMAKE_CURRENT_BINARY_DIR}"
+    "${PROTO_ROOT_DIR}"
 )
-FetchContent_MakeAvailable(gRPC)
 
-get_filename_component(PROTO_ROOT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../../proto" ABSOLUTE)
-set(PROTO_GEN_DIR "${CMAKE_CURRENT_BINARY_DIR}/generated")
-file(MAKE_DIRECTORY ${PROTO_GEN_DIR})
+# Generate Standard Protobuf files (.pb.cc / .pb.h)
+# We use 'protobuf_generate' instead of the legacy 'protobuf_generate_cpp'.
+# It automatically adds the generated C++ files back into the 'frontend' target.
+protobuf_generate(
+    TARGET frontend
+    LANGUAGE cpp
+    IMPORT_DIRS "${PROTO_ROOT_DIR}"
+    PROTOC_OUT_DIR "${CMAKE_CURRENT_BINARY_DIR}"
+)
 
-file(GLOB_RECURSE PROTO_FILES "${PROTO_ROOT_DIR}/*.proto")
-
-set(GENERATED_SRCS)
-
-foreach (PROTO_FILE ${PROTO_FILES})
-    file(RELATIVE_PATH PROTO_FILE_REL ${PROTO_ROOT_DIR} ${PROTO_FILE})
-    get_filename_component(PROTO_FILE_DIR ${PROTO_FILE_REL} DIRECTORY)
-    file(MAKE_DIRECTORY "${PROTO_GEN_DIR}/${PROTO_FILE_DIR}")
-
-    string(REGEX REPLACE "\\.proto$" "" PROTO_FILE_WE ${PROTO_FILE_REL})
-
-    set(OUT_PB_CC "${PROTO_GEN_DIR}/${PROTO_FILE_WE}.pb.cc")
-    set(OUT_PB_H  "${PROTO_GEN_DIR}/${PROTO_FILE_WE}.pb.h")
-    set(OUT_GRPC_CC "${PROTO_GEN_DIR}/${PROTO_FILE_WE}.grpc.pb.cc")
-    set(OUT_GRPC_H  "${PROTO_GEN_DIR}/${PROTO_FILE_WE}.grpc.pb.h")
-
-    add_custom_command(
-        OUTPUT ${OUT_PB_CC} ${OUT_PB_H} ${OUT_GRPC_CC} ${OUT_GRPC_H}
-        COMMAND protobuf::protoc
-        ARGS
-          --cpp_out=${PROTO_GEN_DIR}
-          --grpc_out=${PROTO_GEN_DIR}
-          --plugin=protoc-gen-grpc=$<TARGET_FILE:grpc_cpp_plugin>
-          -I ${PROTO_ROOT_DIR}
-          ${PROTO_FILE}
-        DEPENDS ${PROTO_FILE} protobuf::protoc grpc_cpp_plugin
-        VERBATIM
-    )
-
-    list(APPEND GENERATED_SRCS
-      ${OUT_PB_CC}
-      ${OUT_GRPC_CC}
-    )
-endforeach()
-
-target_sources(frontend PRIVATE ${GENERATED_SRCS})
-target_include_directories(frontend PUBLIC ${PROTO_GEN_DIR})
+# Generate gRPC specific files (.grpc.pb.cc / .grpc.pb.h)
+protobuf_generate(
+    TARGET frontend
+    LANGUAGE grpc
+    GENERATE_EXTENSIONS .grpc.pb.h .grpc.pb.cc
+    PLUGIN "protoc-gen-grpc=$<TARGET_FILE:gRPC::grpc_cpp_plugin>"
+    IMPORT_DIRS "${PROTO_ROOT_DIR}"
+    PROTOC_OUT_DIR "${CMAKE_CURRENT_BINARY_DIR}"
+)
 
 target_link_libraries(frontend
     PUBLIC
-      grpc++
-      protobuf::libprotobuf
+    gRPC::grpc++
+    protobuf::libprotobuf
 )
