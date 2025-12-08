@@ -1,9 +1,11 @@
 add_library(common STATIC
     tmp.cpp
-    # Исходные файлы
 )
+
+find_package(concurrentqueue REQUIRED)
 
 target_link_libraries(common
     PUBLIC
-        spdlog::spdlog
+    spdlog::spdlog
+    concurrentqueue
 )
