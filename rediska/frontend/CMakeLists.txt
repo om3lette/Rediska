@@ -1,4 +1,11 @@
-add_library(frontend STATIC tmp.cpp)
+add_library(frontend STATIC 
+    bool_service.cpp
+    int_service.cpp
+    float_service.cpp
+    string_service.cpp
+    list_service.cpp
+    object_service.cpp
+)
 
 set(ABSL_ENABLE_INSTALL ON)
 
