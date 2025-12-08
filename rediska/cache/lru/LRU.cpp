@@ -1,14 +1,16 @@
 #include "rediska/cache/lru/LRU.hpp"
+#include <algorithm>
 #include <expected>
 #include <mutex>
 #include <chrono>
 #include <optional>
+#include "rediska/cache/lru/LRUConfig.hpp"
 #include "rediska/cache/types.hpp"
 #include "rediska/common/types.hpp"
 
 namespace cache {
-    LRU::LRU(size_t capacity, CacheOpCallback callback)
-        : capacity_(capacity), callback_(callback) {}
+    LRU::LRU(LRUConfig config, CacheOpCallback callback)
+        : config_(std::move(config)), callback_(callback) {}
 
     void LRU::get(CacheKey&& key) {
         std::shared_lock lock(mutex_);
@@ -36,7 +38,7 @@ namespace cache {
             return;
         }
 
-        if (lru_list_.size() >= capacity_) {
+        if (lru_list_.size() >= config_.maxCapacity) {
             keyToItem_.erase(key);
             lru_list_.pop_back();
         }

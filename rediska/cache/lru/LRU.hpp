@@ -2,6 +2,7 @@
 #include <shared_mutex>
 #include <unordered_map>
 #include "rediska/cache/constants.hpp"
+#include "rediska/cache/lru/LRUConfig.hpp"
 #include "rediska/cache/types.hpp"
 #include "rediska/common/types.hpp"
 #include "rediska/cache/CachePolicy.hpp"
@@ -17,7 +18,7 @@ namespace cache {
             ItemMetadata metadata;
         };
 
-        LRU(size_t capacity, CacheOpCallback callback);
+        LRU(LRUConfig config, CacheOpCallback callback);
         ~LRU() = default;
 
         void get(CacheKey&& key) override;
@@ -32,7 +33,7 @@ namespace cache {
 
         std::shared_mutex mutex_;
 
-        size_t capacity_;
+        LRUConfig config_;
         CacheOpCallback callback_;
     };
 }
