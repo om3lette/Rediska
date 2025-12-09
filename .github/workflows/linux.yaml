@@ -13,7 +13,8 @@ jobs:
       matrix:
         config:
           - { compiler: gcc, version: 14, std: 23, build_type: Release }
-          #- { compiler: clang, version: 20, std: 23, build_type: Release }
+          - { compiler: clang, version: 20, std: 23, build_type: Release }
+
     name: "${{matrix.config.compiler}} ${{matrix.config.version}} (C++${{matrix.config.std}}, ${{matrix.config.build_type}})"
     steps:
       - name: Checkout
@@ -25,26 +26,32 @@ jobs:
           compiler: ${{ matrix.config.compiler }}-${{ matrix.config.version }}
           ninja: true
 
-      - name: Install system packages
-        run: |
-          sudo apt-get install -y libgrpc++-dev libgrpc-dev
-
-      - name: Install Dependencies
+      - name: Setup vcpkg
         run: |
           git clone --branch 2025.10.17 --depth 1 https://github.com/microsoft/vcpkg.git && \
-          cd vcpkg && \
-          ./bootstrap-vcpkg.sh && \
-          ./vcpkg install
+          ./vcpkg/bootstrap-vcpkg.sh && \
+          echo 'VCPKG_BINARY_SOURCES=files,${{ github.workspace }}/vcpkg_cache,readwrite' >> $GITHUB_ENV && \
+
+      - name: Cache vcpkg binaries
+        id: vcpkg-bin-cache
+        uses: actions/cache@v4
+        with:
+          path: vcpkg_cache
+          key: vcpkg-bin-${{ runner.os }}-x64-linux-release
+
+      - name: Install vcpkg dependencies
+        run: |
+          ./vcpkg/vcpkg install
 
       - name: Configure
         run: |
-          cmake .. -DCMAKE_TOOLCHAIN_FILE=scripts/buildsystems/vcpkg.cmake \
-                   -DCMAKE_BUILD_TYPE=${{ matrix.config.build_type }} \
-                   -DCMAKE_CXX_STANDARD=${{ matrix.config.std }}
+          cmake . -DCMAKE_TOOLCHAIN_FILE=scripts/buildsystems/vcpkg.cmake \
+                  -DCMAKE_BUILD_TYPE=${{ matrix.config.build_type }} \
+                  -DCMAKE_CXX_STANDARD=${{ matrix.config.std }}
 
       - name: Build
         run: |
-          cmake --build rediska -j $(nproc)
+          cmake --build vcpkg/rediska -j $(nproc)
 
       - name: Test
         run: |
