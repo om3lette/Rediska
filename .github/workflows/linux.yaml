@@ -30,7 +30,7 @@ jobs:
         run: |
           git clone --branch 2025.10.17 --depth 1 https://github.com/microsoft/vcpkg.git && \
           ./vcpkg/bootstrap-vcpkg.sh && \
-          echo 'VCPKG_BINARY_SOURCES=files,${{ github.workspace }}/vcpkg_cache,readwrite' >> $GITHUB_ENV && \
+          echo 'VCPKG_BINARY_SOURCES=files,${{ github.workspace }}/vcpkg_cache,readwrite' >> $GITHUB_ENV
 
       - name: Cache vcpkg binaries
         id: vcpkg-bin-cache
