@@ -1,15 +1,10 @@
 #pragma once
 
-#include <functional>
 #include <variant>
 #include <vector>
 
-#include "rediska/common/OptionalRef.hpp"
 #include "rediska/common/enums.hpp"
 #include "rediska/common/types.hpp"
-
-using FrontendReplyCallback =
-    std::function<void(std::expected<OptionalRef<CacheValue>, RediskaReturnCode>)>;
 
 struct PrimitiveSetArgs {
     CacheValue value;
@@ -52,9 +47,9 @@ using MessageArguments = std::variant<std::monostate,
                                       ListPushBackArgs,
                                       ListPushManyArgs>;
 
+// TODO: Consider adding CallData
 struct FrontendMessage {
     CacheKey key;
     OperationId operation;
     MessageArguments arguments;
-    FrontendReplyCallback reply;
 };
