@@ -37,7 +37,9 @@ jobs:
         uses: actions/cache@v4
         with:
           path: vcpkg_cache
-          key: vcpkg-bin-${{ runner.os }}-x64-linux-release
+          key: vcpkg-bin-${{ runner.os }}-${{ matrix.compiler }}-${{ matrix.version }}-${{ matrix.build_type }}-${{ hashFiles('**/vcpkg.json') }}
+          restore-keys: |
+            vcpkg-bin-${{ runner.os }}-x64-linux-release
 
       - name: Install vcpkg dependencies
         run: |
