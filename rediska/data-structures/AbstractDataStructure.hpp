@@ -3,7 +3,7 @@
 #include <expected>
 #include <optional>
 #include "rediska/common/enums.hpp"
-#include "rediska/data-structures/DSReturnCode.hpp"
+#include "rediska/data-structures/enums.hpp"
 #include "rediska/data-structures/types.hpp"
 
 class AbstractDataStructure {

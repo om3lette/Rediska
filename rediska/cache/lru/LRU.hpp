@@ -1,7 +1,8 @@
+#pragma once
+
 #include <list>
 #include <shared_mutex>
 #include <unordered_map>
-#include "rediska/cache/constants.hpp"
 #include "rediska/cache/lru/LRUConfig.hpp"
 #include "rediska/cache/types.hpp"
 #include "rediska/common/types.hpp"
