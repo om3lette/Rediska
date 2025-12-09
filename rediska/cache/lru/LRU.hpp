@@ -43,5 +43,7 @@ namespace cache {
         void evict() override;
 
         void evict(const std::unordered_map<CacheKey, std::list<CacheNode>::iterator>::iterator node);
+
+        void resetTTLIfEnabled(CacheNode& key);
     };
 }

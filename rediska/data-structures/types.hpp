@@ -4,4 +4,4 @@
 #include <string>
 #include <variant>
 
-using DSValueType = std::variant<bool, int64_t, double, std::string>;
+using DSValue = std::variant<bool, int64_t, double, std::string>;

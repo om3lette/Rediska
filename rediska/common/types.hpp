@@ -10,7 +10,7 @@
 using CacheKey = std::string;
 
 // Definition order of `CacheValue` and `TypeId` MUST match!
-using CacheValue = std::variant<bool, int64_t, double, std::string, std::unique_ptr<ListDataStructure>>;
+using CacheValue = std::variant<bool, int64_t, double, std::string, std::shared_ptr<ListDataStructure>>;
 
 enum class CacheValueId { BOOLEAN = 0, INT, FLOAT, STRING, ARRAY }; // TODO: Object
 

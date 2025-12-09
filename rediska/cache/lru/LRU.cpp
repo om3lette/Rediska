@@ -29,8 +29,7 @@ namespace cache {
         // Move to start
         lru_list_.splice(lru_list_.begin(), lru_list_, it->second);
         keyToItem_[key] = lru_list_.begin();
-
-        callback_(OptionalRef<CacheValue>(it->second->location.value));
+        callback_(std::make_optional(it->second->location.value));
     }
 
     void LRU::set(CacheKey&& key, CacheValue&& value, TTL ttl) {
@@ -38,9 +37,10 @@ namespace cache {
         auto it = keyToItem_.find(key);
         if (it != keyToItem_.end()) {
             it->second->location.value = std::move(value);
+            it->second->location.metadata.expiresAt = getExpirationTime(ttl);
             lru_list_.splice(lru_list_.begin(), lru_list_, it->second);
             lock.unlock();
-            callback_(OptionalRef<CacheValue>());
+            callback_(std::nullopt);
             return;
         }
 
@@ -57,7 +57,7 @@ namespace cache {
             }
         );
         keyToItem_[key] = lru_list_.begin();
-        callback_(OptionalRef<CacheValue>());
+        callback_(std::nullopt);
     }
 
     void LRU::applyTo(CacheKey&& key, OperationId op) {
@@ -68,7 +68,6 @@ namespace cache {
             return callback_(std::unexpected<RediskaReturnCode>(RediskaReturnCode::NOT_FOUND));
         }
 
-        // variant<bool, long, double, basic_string<char>, unique_ptr<ListDataStructure>>
         std::expected<std::optional<CacheValue>, RediskaReturnCode> value;
         std::visit([&value, op](auto&& arg) {
             using T = std::decay_t<decltype(arg)>;
@@ -76,9 +75,9 @@ namespace cache {
                 value = std::unexpected(RediskaReturnCode::INCOMPATIBLE_OPERATION);
             } else if constexpr (std::is_same_v<T, std::unique_ptr<ListDataStructure>>) {
                 // TODO: Replace with real data argument
-                DSValueType dummy_data{};
+                DSValue dummy_data{};
 
-                std::expected<std::optional<DSValueType>, DSReturnCode> res = arg->handle(op, std::move(dummy_data));
+                std::expected<std::optional<DSValue>, DSReturnCode> res = arg->handle(op, std::move(dummy_data));
                 if (!res) {
                     value = std::unexpected(DSReturnCodeToRediskaReturnCode(res.error()));
                     return;
@@ -91,16 +90,13 @@ namespace cache {
                 // TODO: Explore implicit conversion
                 // Attempts to covert failed
                 value = std::visit([](auto&& arg) -> CacheValue {
-                    return CacheValue{std::move(arg)};
+                    return CacheValue{arg};
                 }, std::move(res->value()));
             }
         }, it->second->location.value);
 
-        // TODO: Extract value from variant with index type Return error on failure
-        // TODO: Call handle with arguments (add arguments)
         lru_list_.splice(lru_list_.begin(), lru_list_, it->second);
-        lock.unlock();
-        callback_(OptionalRef<CacheValue>());
+        callback_(std::move(value));
         return;
     }
 
@@ -113,6 +109,6 @@ namespace cache {
 
     void LRU::evict(const std::unordered_map<CacheKey, std::list<CacheNode>::iterator>::iterator node) {
         lru_list_.erase(node->second);
-        keyToItem_.erase(node->second->key);
+        keyToItem_.erase(node);
     }
 }

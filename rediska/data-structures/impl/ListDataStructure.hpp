@@ -8,8 +8,8 @@ class ListDataStructure : public AbstractDataStructure {
 public:
     ~ListDataStructure() = default;
 
-    std::expected<std::optional<DSValueType>, DSReturnCode> handle(OperationId op, DSValueType data) override;
+    std::expected<std::optional<DSValue>, DSReturnCode> handle(OperationId op, DSValue data) override;
 
 private:
-    std::list<DSValueType> list_;
+    std::list<DSValue> list_;
 };

@@ -9,7 +9,7 @@ public:
 
     using arguments = struct {};
 
-    std::expected<std::optional<DSValueType>, DSReturnCode> handle(OperationId op, DSValueType data) override {
+    std::expected<std::optional<DSValue>, DSReturnCode> handle(OperationId op, DSValue data) override {
         switch (op) {
             case OperationId::LIST_GET: {
                 // TODO: Index
@@ -30,7 +30,7 @@ public:
                 if (list_.empty()) {
                     return std::unexpected(DSReturnCode::EMPTY);
                 }
-                DSValueType value = list_.back();
+                DSValue value = list_.back();
                 list_.pop_back();
                 return std::make_optional(value);
             }
@@ -50,5 +50,5 @@ public:
     }
 
 private:
-    std::list<DSValueType> list_;
+    std::list<DSValue> list_;
 };
