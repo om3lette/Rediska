@@ -32,6 +32,27 @@ jobs:
           ./vcpkg/bootstrap-vcpkg.sh && \
           echo 'VCPKG_BINARY_SOURCES=files,${{ github.workspace }}/vcpkg_cache,readwrite' >> $GITHUB_ENV
 
+      - name: Remove unnecessary files to release disk space
+        run: |
+          df -h && \
+          sudo rm -rf \
+            "$AGENT_TOOLSDIRECTORY" \
+            /opt/ghc \
+            /opt/google/chrome \
+            /opt/microsoft/msedge \
+            /opt/microsoft/powershell \
+            /opt/pipx \
+            /usr/lib/mono \
+            /usr/local/julia* \
+            /usr/local/lib/android \
+            /usr/local/lib/node_modules \
+            /usr/local/share/chromium \
+            /usr/local/share/powershell \
+            /usr/local/share/powershell \
+            /usr/share/dotnet \
+            /usr/share/swift && \
+          df -h
+
       - name: Cache vcpkg binaries
         id: vcpkg-bin-cache
         uses: actions/cache@v4
@@ -41,11 +62,7 @@ jobs:
           restore-keys: |
             vcpkg-bin-${{ runner.os }}-x64-linux-release
 
-      - name: Install vcpkg dependencies
-        run: |
-          ./vcpkg/vcpkg install --triplet x64-linux-release
-
-      - name: Configure
+      - name: Configure and install dependencies and
         run: |
           cmake -S . -B build \
             -DCMAKE_TOOLCHAIN_FILE=vcpkg/scripts/buildsystems/vcpkg.cmake \
