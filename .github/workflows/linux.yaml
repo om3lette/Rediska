@@ -4,7 +4,7 @@ on: [push]
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     defaults:
       run:
         shell: bash
@@ -45,13 +45,17 @@ jobs:
 
       - name: Configure
         run: |
-          cmake . -DCMAKE_TOOLCHAIN_FILE=scripts/buildsystems/vcpkg.cmake \
-                  -DCMAKE_BUILD_TYPE=${{ matrix.config.build_type }} \
-                  -DCMAKE_CXX_STANDARD=${{ matrix.config.std }}
+          cmake -S . -B build \
+            -DCMAKE_TOOLCHAIN_FILE=scripts/buildsystems/vcpkg.cmake \
+            -DCMAKE_BUILD_TYPE=${{ matrix.config.build_type }} \
+            -DCMAKE_C_COMPILER=${{ matrix.config.compiler }}-${{ matrix.config.version }} \
+            -DCMAKE_CXX_COMPILER=${{ matrix.config.compiler }}++-${{ matrix.config.version }} \
+            -DCMAKE_CXX_STANDARD=${{ matrix.config.std }}
+            -G Ninja
 
       - name: Build
         run: |
-          cmake --build vcpkg/rediska -j $(nproc)
+          cmake --build build -j $(nproc)
 
       - name: Test
         run: |
