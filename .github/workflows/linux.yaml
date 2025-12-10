@@ -20,7 +20,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup
+      - name: Setup compiler and build system
         uses: aminya/setup-cpp@v1
         with:
           compiler: ${{ matrix.config.compiler }}-${{ matrix.config.version }}
@@ -32,35 +32,20 @@ jobs:
           ./vcpkg/bootstrap-vcpkg.sh && \
           echo 'VCPKG_BINARY_SOURCES=files,${{ github.workspace }}/vcpkg_cache,readwrite' >> $GITHUB_ENV
 
-      - name: Remove unnecessary files to release disk space
-        run: |
-          df -h && \
-          sudo rm -rf \
-            "$AGENT_TOOLSDIRECTORY" \
-            /opt/ghc \
-            /opt/google/chrome \
-            /opt/microsoft/msedge \
-            /opt/microsoft/powershell \
-            /opt/pipx \
-            /usr/lib/mono \
-            /usr/local/julia* \
-            /usr/local/lib/android \
-            /usr/local/lib/node_modules \
-            /usr/local/share/chromium \
-            /usr/local/share/powershell \
-            /usr/local/share/powershell \
-            /usr/share/dotnet \
-            /usr/share/swift && \
-          df -h
-
       - name: Cache vcpkg binaries
         id: vcpkg-bin-cache
         uses: actions/cache@v4
         with:
           path: vcpkg_cache
           key: vcpkg-bin-${{ runner.os }}-${{ matrix.config.compiler }}-${{ matrix.config.version }}-${{ matrix.config.build_type }}-${{ hashFiles('**/vcpkg.json') }}
-          restore-keys: |
-            vcpkg-bin-${{ runner.os }}-x64-linux-release
+
+      # Only free up space on dry run
+      # If cache is present (<= 1gb) there is no need to free up space
+      - name: Free Disk Space (Ubuntu)
+        if: steps.vcpkg-bin-cache.outputs.cache-hit != 'true'
+        uses: jlumbroso/free-disk-space@v1.3.1
+        with:
+          tool-cache: false
 
       - name: Configure and install dependencies and
         run: |
