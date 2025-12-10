@@ -20,7 +20,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup
+      - name: Setup compiler and build system
         uses: aminya/setup-cpp@v1
         with:
           compiler: ${{ matrix.config.compiler }}-${{ matrix.config.version }}
@@ -38,14 +38,16 @@ jobs:
         with:
           path: vcpkg_cache
           key: vcpkg-bin-${{ runner.os }}-${{ matrix.config.compiler }}-${{ matrix.config.version }}-${{ matrix.config.build_type }}-${{ hashFiles('**/vcpkg.json') }}
-          restore-keys: |
-            vcpkg-bin-${{ runner.os }}-x64-linux-release
 
-      - name: Install vcpkg dependencies
-        run: |
-          ./vcpkg/vcpkg install --triplet x64-linux-release
+      # Only free up space on dry run
+      # If cache is present (<= 1gb) there is no need to free up space
+      - name: Free Disk Space (Ubuntu)
+        if: steps.vcpkg-bin-cache.outputs.cache-hit != 'true'
+        uses: jlumbroso/free-disk-space@v1.3.1
+        with:
+          tool-cache: false
 
-      - name: Configure
+      - name: Configure and install dependencies and
         run: |
           cmake -S . -B build \
             -DCMAKE_TOOLCHAIN_FILE=vcpkg/scripts/buildsystems/vcpkg.cmake \
