@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+package v1.primitives.boolean;
+
+service BoolCacheService {
+  rpc Create(BoolCreateRequest) returns (BoolCreateResponse);
+  rpc Set(BoolSetRequest) returns (google.protobuf.Empty);
+  rpc Get(BoolGetRequest) returns (BoolGetResponse);
+  rpc Delete(BoolDeleteRequest) returns (BoolDeleteResponse);
+}
+
+message BoolCreateRequest {
+  bool value = 1;
+  optional uint32 ttl_seconds = 2;
+}
+
+message BoolCreateResponse {
+  string id = 1;
+}
+
+message BoolSetRequest {
+  string id = 1;
+  bool value = 2;
+}
+
+message BoolGetRequest {
+  string id = 1;
+}
+
+message BoolGetResponse {
+  bool value = 1;
+}
+
+message BoolDeleteRequest {
+  string id = 1;
+}
+
+message BoolDeleteResponse {
+  bool removed_value = 1;
+}

@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package v1.collections.common;
+
+message CollectionElement {
+  enum SpecialElementKind {
+    STR = 0;
+    OBJ = 1;
+  }
+
+  SpecialElementKind special_element_kind = 1;
+
+  oneof element {
+    int64 integer = 2;
+    double floating_point = 3;
+    string str_or_obj = 4;
+    bool boolean = 5;
+  }
+}

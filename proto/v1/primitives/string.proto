@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+package v1.primitives.str;
+
+service StringCacheService {
+  rpc Create(StringCreateRequest) returns (StringCreateResponse);
+  rpc Set(StringSetRequest) returns (google.protobuf.Empty);
+  rpc Get(StringGetRequest) returns (StringGetResponse);
+  rpc Delete(StringDeleteRequest) returns (StringDeleteResponse);
+}
+
+message StringCreateRequest {
+  string value = 1;
+  optional uint32 ttl_seconds = 2;
+}
+
+message StringCreateResponse {
+  string id = 1;
+}
+
+message StringSetRequest {
+  string id = 1;
+  string value = 2;
+}
+
+message StringGetRequest {
+  string id = 1;
+}
+
+message StringGetResponse {
+  string value = 1;
+}
+
+message StringDeleteRequest {
+  string id = 1;
+}
+
+message StringDeleteResponse {
+  string removed_value = 1;
+}
