@@ -1,8 +1,9 @@
 add_library(frontend STATIC
-    IntService.cpp
-    BoolService.cpp
-    FloatService.cpp
-    StringService.cpp
+    # IntService.cpp
+    # BoolService.cpp
+    # FloatService.cpp
+    # StringService.cpp
+    CallData.cpp
 )
 
 # Find packages
