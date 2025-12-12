@@ -15,3 +15,11 @@ target_link_libraries(Rediska PRIVATE
     common
     data-structures
 )
+
+# Convenience target
+add_custom_target(run
+    COMMAND $<TARGET_FILE:Rediska>
+    DEPENDS Rediska
+    USES_TERMINAL
+    COMMENT "Building and running Rediska"
+)

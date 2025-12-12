@@ -2,7 +2,7 @@
 
 ## Building from source
 
-### vcpkg
+### Prerequisites (vcpkg)
 
 > [!NOTE]
 > Add `--triplet x64-linux-release` to the vcpkg install to build dependencies in release.
@@ -14,10 +14,9 @@ git clone --branch 2025.10.17 --depth 1 https://github.com/microsoft/vcpkg.git &
 ./vcpkg/vcpkg install
 ```
 
-### Project build
+### CMake workflow
 
 ```bash
-export REDISKA_BUILD_DIR=cmake-build-debug && \
-cmake -S . -B ${REDISKA_BUILD_DIR} -DCMAKE_TOOLCHAIN_FILE=vcpkg/scripts/buildsystems/vcpkg.cmake && \
-cmake --build ${REDISKA_BUILD_DIR} -j $(nproc)
+cmake --preset debug
+cmake --build --preset debug-run
 ```
