@@ -1,6 +1,5 @@
 add_library(cache STATIC
-    tmp.cpp
-    # Исходные файлы
+    lru/LRU.cpp
 )
 
 target_link_libraries(cache PUBLIC

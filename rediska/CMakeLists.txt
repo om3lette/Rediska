@@ -1,4 +1,5 @@
 add_subdirectory(common)
+add_subdirectory(data-structures)
 
 add_subdirectory(worker)
 add_subdirectory(cache)
@@ -12,4 +13,5 @@ target_link_libraries(Rediska PRIVATE
     worker
     cache
     common
+    data-structures
 )

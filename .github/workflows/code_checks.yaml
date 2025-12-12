@@ -21,4 +21,6 @@ jobs:
             --std=c++23 \
             --inline-suppr \
             --error-exitcode=1 \
+            --suppress=missingInclude \
+            --suppress=missingIncludeSystem \
             rediska/
