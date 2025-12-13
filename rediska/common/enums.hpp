@@ -3,8 +3,7 @@
 enum class OperationId {
     GET,
     SET,
-    LIST_GET,
-    LIST_SET,
+    DELETE,
     LIST_PUSH_BACK,
     LIST_POP_BACK,
     LIST_INSERT,

@@ -5,4 +5,5 @@ add_library(worker STATIC
 
 target_link_libraries(worker PUBLIC
     common
+    frontend
 )

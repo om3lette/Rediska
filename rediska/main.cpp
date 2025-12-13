@@ -1,7 +1,5 @@
-#include <iostream>
+#include "rediska/worker/tmp.cpp"
 
 int main() {
-    std::cout << "Hello, Rediska!" << std::endl;
-
-    return 0;
+    return run_print_server();
 }

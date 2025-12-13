@@ -53,12 +53,10 @@ message ListEraseResponse {
 
 message ListSetRequest {
   string id = 1;
-  uint64 index = 2;
-  common.CollectionElement value = 3;
+  repeated common.CollectionElement elements = 2;
 }
 
 message ListSetResponse {
-  common.CollectionElement old_element = 1;
 }
 
 message ListLengthRequest {

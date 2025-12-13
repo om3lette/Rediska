@@ -4,6 +4,7 @@ add_library(frontend STATIC
     # FloatService.cpp
     # StringService.cpp
     CallData.cpp
+    server.hpp
 )
 
 # Find packages

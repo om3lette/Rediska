@@ -11,15 +11,17 @@ public:
 
     std::expected<std::optional<DSValue>, DSReturnCode> handle(OperationId op, DSValue data) override {
         switch (op) {
-            case OperationId::LIST_GET: {
+            case OperationId::GET: {
                 // TODO: Index
                 // if (index < 0 || index >= list_.size()) {
                 //     return std::unexpected(DSReturnCode::OUT_OF_RANGE);
                 // }
                 return std::make_optional(*list_.begin());
             }
-            case OperationId::LIST_SET: {
-                *list_.begin() = data;
+            case OperationId::SET: {
+                // Replace entire list with a single value if provided
+                list_.clear();
+                list_.push_back(data);
                 return std::nullopt;
             }
             case OperationId::LIST_PUSH_BACK: {
